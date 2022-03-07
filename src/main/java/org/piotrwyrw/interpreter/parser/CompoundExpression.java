@@ -1,18 +1,20 @@
 package org.piotrwyrw.interpreter.parser;
 
+import java.util.List;
+
 public class CompoundExpression extends ExpressionNode {
 
-    private StatementNode[] nodes;
+    private List<StatementNode> nodes;
 
-    public CompoundExpression(StatementNode[] nodes) {
+    public CompoundExpression(List<StatementNode> nodes) {
         this.nodes = nodes;
     }
 
-    public StatementNode[] nodes() {
+    public List<StatementNode> nodes() {
         return nodes;
     }
 
-    public void setNodes(StatementNode[] nodes) {
+    public void setNodes(List<StatementNode> nodes) {
         this.nodes = nodes;
     }
 }

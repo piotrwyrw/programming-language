@@ -1,20 +1,22 @@
 package org.piotrwyrw.interpreter.semantics;
 
+import java.util.List;
+
 public class Signature {
 
-    private Variable[] parameters;
+    private List<Variable> parameters;
     private DataType type;
 
-    public Signature(Variable[] parameters, DataType type) {
+    public Signature(List<Variable> parameters, DataType type) {
         this.parameters = parameters;
         this.type = type;
     }
 
-    public Variable[] parameters() {
+    public List<Variable> parameters() {
         return parameters;
     }
 
-    public void setParameters(Variable[] parameters) {
+    public void setParameters(List<Variable> parameters) {
         this.parameters = parameters;
     }
 

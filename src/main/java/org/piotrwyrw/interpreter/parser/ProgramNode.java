@@ -1,19 +1,20 @@
 package org.piotrwyrw.interpreter.parser;
 
+import java.util.List;
+
 public class ProgramNode extends GenericNode {
 
-    private GenericNode[] nodes;
+    private List<GenericNode> nodes;
 
-    public ProgramNode(GenericNode[] nodes) {
+    public ProgramNode(List<GenericNode> nodes) {
         this.nodes = nodes;
     }
 
-    public GenericNode[] nodes() {
+    public List<GenericNode> nodes() {
         return nodes;
     }
 
-    public void setNodes(GenericNode[] nodes) {
+    public void setNodes(List<GenericNode> nodes) {
         this.nodes = nodes;
     }
-
 }

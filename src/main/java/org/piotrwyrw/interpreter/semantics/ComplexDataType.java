@@ -1,11 +1,13 @@
 package org.piotrwyrw.interpreter.semantics;
 
+import java.util.List;
+
 public class ComplexDataType extends DataType {
 
     private String identifier;
-    private Variable[] variables;
+    private List<Variable> variables;
 
-    public ComplexDataType(String identifier, Variable[] variables) {
+    public ComplexDataType(String identifier, List<Variable> variables) {
         this.identifier = identifier;
         this.variables = variables;
     }
@@ -18,11 +20,11 @@ public class ComplexDataType extends DataType {
         this.identifier = identifier;
     }
 
-    public Variable[] variables() {
+    public List<Variable> variables() {
         return variables;
     }
 
-    public void setVariables(Variable[] variables) {
+    public void setVariables(List<Variable> variables) {
         this.variables = variables;
     }
 }
