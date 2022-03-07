@@ -1,16 +1,19 @@
 package org.piotrwyrw.interpreter;
 
+import org.piotrwyrw.interpreter.parser.*;
+import org.piotrwyrw.interpreter.tokenizer.TokenStream;
 import org.piotrwyrw.interpreter.tokenizer.Tokenizer;
 
 public class Main {
 
     public static void main(String[] args) {
-        String input = "int main(int argc, char **argv) { printf(\"Hello, world!\\n\"); }";
+        String input = "2+2*2";
         Tokenizer tokenizer = new Tokenizer(input);
         tokenizer.analyze();
-        tokenizer.tokens().forEach((item) -> {
-            item.print();
-        });
+        TokenStream stream = new TokenStream(tokenizer.tokens());
+        Parser parser = new Parser(stream);
+        ExpressionNode node = parser.parseAdditiveExpression();
+        ASTTools.analyze(node);
     }
 
 }

@@ -1,6 +1,6 @@
 package org.piotrwyrw.interpreter.semantics;
 
-public class ComplexDataType {
+public class ComplexDataType extends DataType {
 
     private String identifier;
     private Variable[] variables;

@@ -1,6 +1,6 @@
 package org.piotrwyrw.interpreter.semantics;
 
-public class PrimitiveDataType {
+public class PrimitiveDataType extends DataType {
 
     private PrimitiveType type;
 
