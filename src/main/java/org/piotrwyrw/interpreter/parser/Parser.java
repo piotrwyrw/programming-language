@@ -27,15 +27,79 @@ public class Parser {
         this.stream = stream;
     }
 
+    public PreprocessorBlock parsePreprocessors() {
+        List<PreprocessorStatement> statements = new ArrayList<>();
+        int flag_line = -1;
+        while (stream.hasNext()) {
+            Token current = stream.get();
+
+            if (current.type() != TokenType.HASH) {
+                flag_line = current.line();
+            }
+
+            if (current.line() == flag_line) {
+                if (stream.hasNext()) stream.next();
+                else break;
+                continue;
+            }
+
+            statements.add(parsePreprocessorStatement());
+        }
+        return new PreprocessorBlock(statements);
+    }
+
+    // # COMMAND "PARAMETER"
+    public PreprocessorStatement parsePreprocessorStatement() {
+        // Get line
+        int line = stream.get().line();
+
+        // Skip '#'
+        stream.next();
+
+        if (stream.get().line() != line) {
+            Error.error(stream.get(), "The full preprocessor statement must fit in a single line.");
+        }
+
+        if (stream.get().type() != TokenType.IDENTIFIER) {
+            Error.error(stream.get(), "Expected preprocessor command after '#'.");
+        }
+
+        String command = stream.get().value();
+        String parameter = null;
+
+        // Get optional parameter
+
+        if (stream.hasNext()) {
+            stream.next();
+            if (stream.get().line() == line && stream.get().type() == TokenType.STRING_LITERAL) {
+                parameter = stream.get().value();
+            }
+        }
+
+        return new PreprocessorStatement(PreprocessorStatementType.valueOf(command.toUpperCase()), parameter);
+    }
+
     // Parse the whole program, hopefully
     public ProgramNode parseProgram() {
         List<GenericNode> nodes = new ArrayList<>();
+        int flag_line = -1;
         while (stream.hasNextFew(2)) {
             Token current = stream.get();
             Token next = stream.next();
             stream.back();
 
-            if (current.type() == TokenType.IDENTIFIER && next.type() == TokenType.IDENTIFIER) {
+            // Ignore any preprocessor statements
+            if (current.type() == TokenType.HASH) {
+                flag_line = current.line();
+            }
+
+            if (current.line() == flag_line) {
+                if (stream.hasNext()) stream.next();
+                else break;
+                continue;
+            }
+
+            else if (current.type() == TokenType.IDENTIFIER && next.type() == TokenType.IDENTIFIER) {
                 nodes.add(parseVariableDeclarationMode());
             }
 

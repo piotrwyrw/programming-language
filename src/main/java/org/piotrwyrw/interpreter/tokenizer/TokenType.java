@@ -33,6 +33,8 @@ public enum TokenType {
     SHIFT_LEFT,
 
     DOT,
-    COMMA
+    COMMA,
+
+    HASH
 
 }

@@ -103,4 +103,28 @@ public class ASTTools {
         }
     }
 
+    public static void analyzePreprocessor(PreprocessorNode node) {
+        analyzePreprocessor(node, 0);
+    }
+
+    public static void analyzePreprocessor(PreprocessorNode node, int depth) {
+        if (node instanceof PreprocessorStatement) {
+            PreprocessorStatement statement = ((PreprocessorStatement) node);
+            print(depth, "Preprocessor Statement ->");
+            depth ++;
+            print(depth, "Command => " + statement.type().toString());
+            print(depth, "Parameter => " + ((statement.parameter() == null) ? "null" : statement.parameter()));
+            depth --;
+        }
+        if (node instanceof PreprocessorBlock) {
+            PreprocessorBlock block = ((PreprocessorBlock) node);
+            print(depth, "Preprocessor Block ->");
+            depth ++;
+            for (int i = 0; i < block.statements().size(); i ++) {
+                analyzePreprocessor(block.statements().get(i), depth);
+            }
+            depth --;
+        }
+    }
+
 }

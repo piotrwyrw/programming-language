@@ -58,6 +58,8 @@ public class Tokenizer {
             case '.': return TokenType.DOT;
             case ',': return TokenType.COMMA;
 
+            case '#': return TokenType.HASH;
+
             default: return TokenType.NOT_CLASSIFIED;
         }
     }
