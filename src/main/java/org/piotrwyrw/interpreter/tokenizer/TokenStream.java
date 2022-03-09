@@ -1,5 +1,7 @@
 package org.piotrwyrw.interpreter.tokenizer;
 
+import org.piotrwyrw.interpreter.util.Error;
+
 import java.util.List;
 
 public class TokenStream {
@@ -22,9 +24,18 @@ public class TokenStream {
 
     public Token next() {
         if (pos + 1 < tokens.size()) {
-            return tokens.get(pos ++);
+            return tokens.get(++ pos);
         }
-        throw new IllegalStateException("Ran out of tokens.");
+        Error.error(get(), "Ran out of tokens.");
+        return null;
+    }
+
+    public Token back() {
+        if (pos - 1 >= 0) {
+            return tokens.get(-- pos);
+        }
+        Error.error(get(), "Can't go back a token.");
+        return null;
     }
 
     public Token get() {
@@ -36,6 +47,14 @@ public class TokenStream {
 
     public boolean isLast() {
         return pos + 1 >= tokens.size();
+    }
+
+    public boolean hasNext() {
+        return !isLast();
+    }
+
+    public boolean hasNextFew(int c) {
+        return pos + c < tokens.size();
     }
 
     public void rewind() {

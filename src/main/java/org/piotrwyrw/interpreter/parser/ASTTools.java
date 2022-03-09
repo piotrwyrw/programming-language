@@ -1,5 +1,9 @@
 package org.piotrwyrw.interpreter.parser;
 
+import org.piotrwyrw.interpreter.semantics.DataType;
+import org.piotrwyrw.interpreter.semantics.PrimitiveDataType;
+import org.piotrwyrw.interpreter.semantics.PrimitiveType;
+
 public class ASTTools {
 
     public static void analyze(GenericNode node) {
@@ -20,6 +24,17 @@ public class ASTTools {
 
     private static void print(int d, String str, boolean endl) {
         System.out.print(spacer(d) + str + (endl ? "\n" : ""));
+    }
+
+    public static void analyzeType(DataType type, int depth) {
+        if (type instanceof DummyType) {
+            DummyType dt = ((DummyType) type);
+            print(depth, "Dummy Type => " + dt.identifier());
+        }
+        if (type instanceof PrimitiveDataType) {
+            PrimitiveDataType pdt = ((PrimitiveDataType) type);
+            print(depth, "Primitive Type => " + pdt.type().toString());
+        }
     }
 
     private static void analyze(GenericNode node, int d) {
@@ -55,6 +70,36 @@ public class ASTTools {
             if (n.value() instanceof Integer) {
                 System.out.println("(Integer) " + n.value());
             }
+        }
+        if (node instanceof VariableDeclarationNode) {
+            VariableDeclarationNode n = ((VariableDeclarationNode) node);
+            print(depth, "Variable declaration ->");
+            depth ++;
+            print(depth, "Type -> ", true);
+            depth ++;
+            analyzeType(n.type(), depth);
+            depth --;
+            print(depth, "Name => " + n.identifier());
+            print(depth, "Value ->");
+            depth ++;
+            analyze(n.value(), depth);
+            depth -= 2;
+        }
+        if (node instanceof IdentifierNode) {
+            IdentifierNode id = ((IdentifierNode) node);
+            print(depth, "Identifier node => " + id.identifier());
+        }
+        if (node instanceof ListExpression) {
+            ListExpression lxp = ((ListExpression) node);
+            print(depth, "List Expression ->");
+            depth ++;
+            for (int i = 0; i < lxp.expressions().size(); i ++) {
+                print(depth, "Element " + i + " ->");
+                depth ++;
+                analyze(lxp.expressions().get(i), depth);
+                depth --;
+            }
+            depth --;
         }
     }
 

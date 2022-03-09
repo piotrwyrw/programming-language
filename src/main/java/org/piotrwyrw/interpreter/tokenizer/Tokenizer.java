@@ -53,6 +53,7 @@ public class Tokenizer {
             case '?': return TokenType.QUESTIONMARK;
             case '>': return TokenType.LGREATER;
             case '<': return TokenType.RGREATER;
+            case '=': return TokenType.EQUALS;
 
             case '.': return TokenType.DOT;
             case ',': return TokenType.COMMA;

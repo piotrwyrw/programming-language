@@ -25,6 +25,7 @@ public enum TokenType {
     QUESTIONMARK,
     LGREATER,
     RGREATER,
+    EQUALS,
 
     POINT_RIGHT,
     POINT_LEFT,
