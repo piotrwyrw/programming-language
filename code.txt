@@ -1,3 +1,5 @@
-#include "print.txt"
-
-string hello = "Hello, world!";
+1
++
+2
++
+3

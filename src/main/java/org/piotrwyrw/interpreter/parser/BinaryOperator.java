@@ -10,6 +10,8 @@ public enum BinaryOperator {
     DIV,
     LSHIFT,
     RSHIFT,
+    PUSH_LEFT,
+    PUSH_RIGHT,
     UNKNOWN;
 
     public static BinaryOperator fromTokenType(TokenType type) {
@@ -18,6 +20,8 @@ public enum BinaryOperator {
             case DASH: return SUB;
             case ASTERISK: return MUL;
             case SLASH: return DIV;
+            case POINT_RIGHT: return PUSH_RIGHT;
+            case POINT_LEFT: return PUSH_LEFT;
             default: return UNKNOWN;
 
         }

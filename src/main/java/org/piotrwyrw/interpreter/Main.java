@@ -34,12 +34,13 @@ public class Main {
         Tokenizer tokenizer = new Tokenizer(code.get());
         tokenizer.analyze();
 
-//        tokenizer.tokens().forEach((e) -> {
-//            e.print();
-//        });
+        tokenizer.tokens().forEach((e) -> {
+            e.print();
+        });
 
 
         TokenStream stream = new TokenStream(tokenizer.tokens());
+
         Parser parser = new Parser(stream);
 
         PreprocessorBlock block = parser.parsePreprocessors();

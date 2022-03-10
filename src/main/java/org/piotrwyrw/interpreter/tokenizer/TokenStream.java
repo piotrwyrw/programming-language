@@ -1,17 +1,20 @@
 package org.piotrwyrw.interpreter.tokenizer;
 
-import org.piotrwyrw.interpreter.util.Error;
-
 import java.util.List;
 
 public class TokenStream {
 
     private List<Token> tokens;
     private int pos;
+    private Token current;
+    private Token next;
 
     public TokenStream(List<Token> tokens) {
         this.tokens = tokens;
         this.pos = 0;
+        this.current = null;
+        this.next = null;
+        consume(); consume();
     }
 
     public List<Token> tokens() {
@@ -22,27 +25,23 @@ public class TokenStream {
         return pos;
     }
 
-    public Token next() {
-        if (pos + 1 < tokens.size()) {
-            return tokens.get(++ pos);
-        }
-        Error.error(get(), "Ran out of tokens.");
-        return null;
-    }
-
-    public Token back() {
-        if (pos - 1 >= 0) {
-            return tokens.get(-- pos);
-        }
-        Error.error(get(), "Can't go back a token.");
-        return null;
-    }
-
-    public Token get() {
+    public Token consume() {
+        current = next;
         if (pos < tokens.size()) {
-            return tokens.get(pos);
+            next = tokens.get(pos);
+            pos ++;
+        } else {
+            next = null;
         }
-        return null;
+        return current;
+    }
+
+    public Token current() {
+        return current;
+    }
+
+    public Token next() {
+        return next;
     }
 
     public boolean isLast() {
@@ -50,15 +49,17 @@ public class TokenStream {
     }
 
     public boolean hasNext() {
-        return !isLast();
+        return next != null;
     }
 
-    public boolean hasNextFew(int c) {
-        return pos + c < tokens.size();
+    public boolean hasCurrent() {
+        return current != null;
     }
 
     public void rewind() {
         pos = 0;
+        current = null;
+        next = null;
+        consume(); consume();
     }
-
 }

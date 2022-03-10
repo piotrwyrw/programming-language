@@ -8,4 +8,8 @@ public class Error {
         throw new IllegalStateException("[" + t.value() + " - " + t.type().toString() + " @ " + t.line() + "] " + ermsg);
     }
 
+    public static void error(String ermsg) {
+        throw new IllegalStateException("[ ERROR ] " + ermsg);
+    }
+
 }

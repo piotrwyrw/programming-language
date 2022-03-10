@@ -2,7 +2,7 @@ package org.piotrwyrw.interpreter.parser;
 
 import org.piotrwyrw.interpreter.semantics.DataType;
 import org.piotrwyrw.interpreter.semantics.PrimitiveDataType;
-import org.piotrwyrw.interpreter.semantics.PrimitiveType;
+import org.piotrwyrw.interpreter.semantics.Variable;
 
 public class ASTTools {
 
@@ -89,14 +89,27 @@ public class ASTTools {
             IdentifierNode id = ((IdentifierNode) node);
             print(depth, "Identifier node => " + id.identifier());
         }
-        if (node instanceof ListExpression) {
-            ListExpression lxp = ((ListExpression) node);
-            print(depth, "List Expression ->");
+        if (node instanceof ComplexInitializer) {
+            ComplexInitializer lxp = ((ComplexInitializer) node);
+            print(depth, "Complex Initializer ->");
             depth ++;
             for (int i = 0; i < lxp.expressions().size(); i ++) {
-                print(depth, "Element " + i + " ->");
+                print(depth, lxp.expressions().get(i).first() + " ->");
                 depth ++;
-                analyze(lxp.expressions().get(i), depth);
+                analyze(lxp.expressions().get(i).last(), depth);
+                depth --;
+            }
+            depth --;
+        }
+        if (node instanceof StructureNode) {
+            StructureNode struc = ((StructureNode) node);
+            print(depth, "Structure definition ->");
+            depth ++;
+            for (int i = 0; i < struc.elements().size(); i ++) {
+                Variable var = struc.elements().get(i);
+                print(depth, var.identifier() + " => ");
+                depth ++;
+                analyzeType(var.type(), depth);
                 depth --;
             }
             depth --;

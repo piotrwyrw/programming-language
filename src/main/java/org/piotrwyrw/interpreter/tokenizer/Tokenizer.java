@@ -133,7 +133,24 @@ public class Tokenizer {
             if ((type == t || (type == TokenType.IDENTIFIER && t == TokenType.INTEGER_LITERAL)) && type != TokenType.NOT_CLASSIFIED) {
                 value += c;
                 if (isSpecialCharacter(type)) {
-                    // Put the token on the list and reset
+                    // Check if the next token is also a special character in order to form
+                    // complex Tokens
+                    if (i + 1 < input.length()) {
+                        TokenType nt = determineType(input.charAt(i + 1));
+                        if (t == TokenType.DASH && nt == TokenType.LGREATER) {
+                            type = TokenType.POINT_RIGHT;
+                            i ++;
+                        } else if (t == TokenType.RGREATER && nt == TokenType.DASH) {
+                            type = TokenType.POINT_LEFT;
+                            i ++;
+                        } else if (t == TokenType.RGREATER && nt == TokenType.RGREATER) {
+                            type = TokenType.SHIFT_LEFT;
+                            i ++;
+                        } else if (t == TokenType.LGREATER && nt == TokenType.LGREATER) {
+                            type = TokenType.SHIFT_RIGHT;
+                            i ++;
+                        }
+                    }
                     tokens.add(new Token(value, type, line));
                     type = TokenType.NOT_CLASSIFIED;
                     value = "";
