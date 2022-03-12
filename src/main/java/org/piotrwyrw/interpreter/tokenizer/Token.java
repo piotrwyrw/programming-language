@@ -42,4 +42,17 @@ public class Token {
         System.out.println("[" + type.toString().toUpperCase() + "] " + value);
     }
 
+
+    public boolean isPointerOperator() {
+        return type == TokenType.POINT_LEFT || type == TokenType.POINT_RIGHT;
+    }
+
+    public boolean isAdditiveOperator() {
+        return type == TokenType.PLUS || type == TokenType.DASH;
+    }
+
+    public boolean isMultiplicativeOperator() {
+        return type == TokenType.ASTERISK || type == TokenType.SLASH || type == TokenType.SHIFT_RIGHT || type == TokenType.SHIFT_LEFT;
+    }
+
 }

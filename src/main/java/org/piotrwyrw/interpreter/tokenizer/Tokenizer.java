@@ -64,6 +64,19 @@ public class Tokenizer {
         }
     }
 
+    private TokenType extendedType(TokenType type, String value) {
+        if (type != TokenType.IDENTIFIER) {
+            return type;
+        }
+        if (value.equals("true")) {
+            return TokenType.TRUE;
+        } else if (value.equals("false")) {
+            return TokenType.FALSE;
+        } else {
+            return type;
+        }
+    }
+
     private boolean isSpecialCharacter(TokenType type) {
         return type != TokenType.IDENTIFIER && type != TokenType.INTEGER_LITERAL && type != TokenType.STRING_LITERAL;
     }
@@ -87,6 +100,7 @@ public class Tokenizer {
         String value = "";
         int line = 1;
         boolean str = false;
+        boolean chr = false;
         for (int i = 0; i < input.length(); i ++) {
             char c = input.charAt(i);
 
@@ -116,7 +130,7 @@ public class Tokenizer {
             if (isReduntant(c)) {
                 // Put the token on the list and reset
                 if (type != TokenType.NOT_CLASSIFIED) {
-                    tokens.add(new Token(value, type, line));
+                    tokens.add(new Token(value, extendedType(type, value), line));
                     type = TokenType.NOT_CLASSIFIED;
                     value = "";
                 }
@@ -151,7 +165,7 @@ public class Tokenizer {
                             i ++;
                         }
                     }
-                    tokens.add(new Token(value, type, line));
+                    tokens.add(new Token(value, extendedType(type, value), line));
                     type = TokenType.NOT_CLASSIFIED;
                     value = "";
                     continue;
@@ -161,7 +175,7 @@ public class Tokenizer {
             // else put this token on the buffer, reset control
             // variables, and go one char back.
             else {
-                tokens.add(new Token(value, type, line));
+                tokens.add(new Token(value, extendedType(type, value), line));
                 type = TokenType.NOT_CLASSIFIED;
                 value = "";
                 i --;
@@ -171,7 +185,7 @@ public class Tokenizer {
             // Lastly, check if this was the last char of the input string.
             // Clearing control variables is redundant, since this is the last interation.
             if (i + 1 >= input.length()) {
-                tokens.add(new Token(value, type, line));
+                tokens.add(new Token(value, extendedType(type, value), line));
             }
         }
     }

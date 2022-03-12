@@ -28,7 +28,7 @@ public class Main {
         code.set(new String());
 
         reader.lines().forEach((line) -> {
-            code.set(code.get() + '\n' + line);
+            code.set(((code.get().isEmpty()) ? ("") : (code.get() + '\n')) + line);
         });
 
         Tokenizer tokenizer = new Tokenizer(code.get());
@@ -42,15 +42,10 @@ public class Main {
         TokenStream stream = new TokenStream(tokenizer.tokens());
 
         Parser parser = new Parser(stream);
-
-        PreprocessorBlock block = parser.parsePreprocessors();
-        ASTTools.analyzePreprocessor(block);
-
-        stream.rewind();
         parser = new Parser(stream);
 
-        ProgramNode program = parser.parseProgram();
-        ASTTools.analyze(program);
+        ExpressionNode node = parser.parseExpression();
+        ASTTools.analyze(node);
     }
 
 }

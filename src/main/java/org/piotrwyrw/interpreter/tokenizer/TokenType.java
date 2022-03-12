@@ -35,6 +35,9 @@ public enum TokenType {
     DOT,
     COMMA,
 
-    HASH
+    HASH,
+
+    TRUE,
+    FALSE
 
 }

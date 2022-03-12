@@ -3,6 +3,8 @@ package org.piotrwyrw.interpreter.semantics;
 public enum PrimitiveType {
 
     STRING,
-    INT;
+    INT,
+    CHAR,
+    BOOL;
 
 }
