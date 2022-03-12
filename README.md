@@ -1,6 +1,4 @@
-# Programming language
-Yet another attempt to create an interpreted programming language.
-This time in java tho.
+# CUE Lang
+Completely Unpleasant Experience
 
-Note, that this is just a prototype.
-The whole project will be rewritten in C, shall it succeed.
+An interpreted programming language written in Java.
