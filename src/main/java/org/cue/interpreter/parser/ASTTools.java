@@ -66,9 +66,10 @@ public class ASTTools {
             print(depth, "Literal node => ", false);
             if (n.value() instanceof String) {
                 System.out.println("(String) " + n.value());
-            }
-            if (n.value() instanceof Integer) {
+            } else if (n.value() instanceof Integer) {
                 System.out.println("(Integer) " + n.value());
+            } else if (n.value() instanceof Boolean) {
+                System.out.println("(Boolean) " + n.value());
             }
         }
         if (node instanceof VariableDeclarationNode) {
@@ -79,7 +80,10 @@ public class ASTTools {
             depth ++;
             analyzeType(n.type(), depth);
             depth --;
-            print(depth, "Name => " + n.identifier());
+            print(depth, "Name => ");
+            depth ++;
+            analyze(n.identifier(), depth);
+            depth --;
             print(depth, "Value ->");
             depth ++;
             analyze(n.value(), depth);
@@ -87,7 +91,7 @@ public class ASTTools {
         }
         if (node instanceof IdentifierNode) {
             IdentifierNode id = ((IdentifierNode) node);
-            print(depth, "Identifier node => " + id.identifier());
+            print(depth, "Identifier node => " + id.identifier().value());
         }
         if (node instanceof ComplexInitializer) {
             ComplexInitializer lxp = ((ComplexInitializer) node);
@@ -107,7 +111,7 @@ public class ASTTools {
             depth ++;
             for (int i = 0; i < struc.elements().size(); i ++) {
                 Variable var = struc.elements().get(i);
-                print(depth, var.identifier() + " => ");
+                analyze(var.identifier());
                 depth ++;
                 analyzeType(var.type(), depth);
                 depth --;

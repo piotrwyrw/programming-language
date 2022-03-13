@@ -4,21 +4,21 @@ import org.cue.interpreter.semantics.Signature;
 
 public class FunctionDefinitionNode {
 
-    private String identifier;
+    private IdentifierNode identifier;
     private CompoundExpression block;
     private Signature signature;
 
-    public FunctionDefinitionNode(String identifier, CompoundExpression block, Signature signature) {
+    public FunctionDefinitionNode(IdentifierNode identifier, CompoundExpression block, Signature signature) {
         this.identifier = identifier;
         this.block = block;
         this.signature = signature;
     }
 
-    public String identifier() {
+    public IdentifierNode identifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierNode identifier) {
         this.identifier = identifier;
     }
 

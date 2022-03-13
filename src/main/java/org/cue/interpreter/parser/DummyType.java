@@ -4,17 +4,17 @@ import org.cue.interpreter.semantics.DataType;
 
 public class DummyType extends DataType {
 
-    private String identifier;
+    private IdentifierNode identifier;
 
-    public DummyType(String identifier) {
+    public DummyType(IdentifierNode identifier) {
         this.identifier = identifier;
     }
 
-    public String identifier() {
+    public IdentifierNode identifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierNode identifier) {
         this.identifier = identifier;
     }
 }

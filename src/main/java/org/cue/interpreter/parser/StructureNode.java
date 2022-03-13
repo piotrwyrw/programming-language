@@ -6,19 +6,19 @@ import java.util.List;
 
 public class StructureNode extends StatementNode {
 
-    private String identifier;
+    private IdentifierNode identifier;
     private List<Variable> elements;
 
-    public StructureNode(String identifier, List<Variable> elements) {
+    public StructureNode(IdentifierNode identifier, List<Variable> elements) {
         this.identifier = identifier;
         this.elements = elements;
     }
 
-    public String identifier() {
+    public IdentifierNode identifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierNode identifier) {
         this.identifier = identifier;
     }
 

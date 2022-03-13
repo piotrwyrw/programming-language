@@ -2,6 +2,7 @@ package org.cue.interpreter;
 
 import org.cue.interpreter.parser.ASTTools;
 import org.cue.interpreter.parser.ExpressionNode;
+import org.cue.interpreter.parser.GenericNode;
 import org.cue.interpreter.parser.Parser;
 import org.cue.interpreter.tokenizer.TokenStream;
 import org.cue.interpreter.tokenizer.Tokenizer;
@@ -46,7 +47,7 @@ public class Main {
         Parser parser = new Parser(stream);
         parser = new Parser(stream);
 
-        ExpressionNode node = parser.parseExpression();
+        GenericNode node = parser.parseVariableDeclaration();
         ASTTools.analyze(node);
     }
 

@@ -1,6 +1,6 @@
 package org.cue.interpreter.parser;
 
-import org.cue.interpreter.Pair;
+import org.cue.interpreter.entity.Pair;
 
 import java.util.List;
 

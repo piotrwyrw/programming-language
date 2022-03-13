@@ -1,4 +1,4 @@
-package org.cue.interpreter;
+package org.cue.interpreter.entity;
 
 public class Pair<K, V> {
 

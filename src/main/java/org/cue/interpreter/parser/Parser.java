@@ -1,5 +1,8 @@
 package org.cue.interpreter.parser;
 
+import org.cue.interpreter.semantics.DataType;
+import org.cue.interpreter.semantics.PrimitiveDataType;
+import org.cue.interpreter.semantics.PrimitiveType;
 import org.cue.interpreter.tokenizer.TokenStream;
 import org.cue.interpreter.tokenizer.TokenType;
 import org.cue.interpreter.util.Error;
@@ -18,6 +21,38 @@ public class Parser {
 
     public void setStream(TokenStream stream) {
         this.stream = stream;
+    }
+
+    public VariableDeclarationNode parseVariableDeclaration() {
+        if (stream.current().type() != TokenType.IDENTIFIER) {
+            Error.error(stream.current(), "Expected identifier");
+        }
+
+        DataType type = null;
+        PrimitiveType pt = PrimitiveType.valueOf(stream.current().value().toUpperCase());
+        type = (pt == null) ? new DummyType(stream.current().toIdentifierNode()) : new PrimitiveDataType(pt);
+
+        stream.consume();
+
+        IdentifierNode iden = stream.current().toIdentifierNode();
+
+        stream.consume();
+
+        if (stream.current().type() != TokenType.EQUALS) {
+            Error.error(stream.current(), "Expected '='");
+        }
+
+        stream.consume();
+
+        ExpressionNode xpr = parseExpression();
+
+        stream.consume();
+
+        if (stream.current().type() != TokenType.SEMICOLON) {
+            Error.error(stream.current(), "Expected ';'");
+        }
+
+        return new VariableDeclarationNode(iden, type, xpr);
     }
 
     public ExpressionNode parseExpression() {
@@ -157,7 +192,7 @@ public class Parser {
         if (stream.current().type() != TokenType.IDENTIFIER) {
             Error.error(stream.current(), "Expected identifier.");
         }
-        return new IdentifierNode(stream.current().value());
+        return new IdentifierNode(stream.current());
     }
 
     public ExpressionNode parseSubexpression() {

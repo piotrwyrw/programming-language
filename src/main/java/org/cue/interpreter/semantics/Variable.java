@@ -1,20 +1,22 @@
 package org.cue.interpreter.semantics;
 
+import org.cue.interpreter.parser.IdentifierNode;
+
 public class Variable {
 
-    private String identifier;
+    private IdentifierNode identifier;
     private DataType type;
 
-    public Variable(String identifier, DataType type) {
+    public Variable(IdentifierNode identifier, DataType type) {
         this.identifier = identifier;
         this.type = type;
     }
 
-    public String identifier() {
+    public IdentifierNode identifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierNode identifier) {
         this.identifier = identifier;
     }
 
@@ -25,4 +27,5 @@ public class Variable {
     public void setType(DataType type) {
         this.type = type;
     }
+
 }

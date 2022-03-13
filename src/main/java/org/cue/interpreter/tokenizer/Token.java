@@ -1,5 +1,8 @@
 package org.cue.interpreter.tokenizer;
 
+import org.cue.interpreter.parser.IdentifierNode;
+import org.cue.interpreter.util.Error;
+
 public class Token {
 
     private String value;
@@ -51,6 +54,13 @@ public class Token {
 
     public boolean isMultiplicativeOperator() {
         return type == TokenType.ASTERISK || type == TokenType.SLASH || type == TokenType.SHIFT_RIGHT || type == TokenType.SHIFT_LEFT;
+    }
+
+    public IdentifierNode toIdentifierNode() {
+        if (type != TokenType.IDENTIFIER) {
+            Error.error(this, "Internal error - Not an identifier");
+        }
+        return new IdentifierNode(this);
     }
 
 }
