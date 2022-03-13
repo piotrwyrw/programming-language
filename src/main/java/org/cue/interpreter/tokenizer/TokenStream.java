@@ -37,10 +37,16 @@ public class TokenStream {
     }
 
     public Token current() {
+        if (current == null) {
+            throw new IllegalStateException("Current token is null.");
+        }
         return current;
     }
 
     public Token next() {
+        if (next == null) {
+            throw new IllegalStateException("Next token is null.");
+        }
         return next;
     }
 

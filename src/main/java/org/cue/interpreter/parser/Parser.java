@@ -1,11 +1,16 @@
 package org.cue.interpreter.parser;
 
+import org.cue.interpreter.entity.Pair;
 import org.cue.interpreter.semantics.DataType;
 import org.cue.interpreter.semantics.PrimitiveDataType;
 import org.cue.interpreter.semantics.PrimitiveType;
 import org.cue.interpreter.tokenizer.TokenStream;
 import org.cue.interpreter.tokenizer.TokenType;
 import org.cue.interpreter.util.Error;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Parser {
 
@@ -29,8 +34,12 @@ public class Parser {
         }
 
         DataType type = null;
-        PrimitiveType pt = PrimitiveType.valueOf(stream.current().value().toUpperCase());
-        type = (pt == null) ? new DummyType(stream.current().toIdentifierNode()) : new PrimitiveDataType(pt);
+        String types = stream.current().value();
+        if (PrimitiveType.fromString(types) == null) {
+            type = new DummyType(stream.current().toIdentifierNode());
+        } else {
+            type = new PrimitiveDataType(PrimitiveType.fromString(types));
+        }
 
         stream.consume();
 
@@ -140,6 +149,8 @@ public class Parser {
             return parseIdentifier();
         } else if (stream.current().type() == TokenType.LPAREN) {
             return parseSubexpression();
+        } else if (stream.current().type() == TokenType.LBRACKET) {
+            return parseComplexInitializer();
         } else {
             Error.error(stream.current(), "Bad primary expression.");
         }
@@ -163,32 +174,36 @@ public class Parser {
         } else if (stream.current().type() == TokenType.FALSE) {
             return new LiteralNode<Boolean>(false);
         } else if (stream.current().type() == TokenType.DASH) {
-            if (stream.next() == null) {
-                Error.error(stream.current(), "Expected integer literal after '-'");
-            }
-            if (stream.next().type() != TokenType.INTEGER_LITERAL) {
-                Error.error(stream.current(), "Expected integer literal.");
-            }
-            stream.consume(); // Skip '-'
-            ExpressionNode xpr = parsePrimaryExpression();
-            if (!(xpr instanceof LiteralNode<?>)) {
-                Error.error("Not a literal node.");
-            }
-            LiteralNode<?> n = ((LiteralNode<?>) xpr);
-            if (!(n.value() instanceof Integer)) {
-                Error.error(stream.current(), "Not an integer literal.");
-            }
-            int i = ((Integer) n.value()).intValue();
-            i = (i > 0) ? i * -1 : i;
-            ((LiteralNode<Integer>) n).setValue(i);
-            return n;
+            return parseNegativeLiteral();
         } else {
             Error.error(stream.current(), "Bad literal.");
         }
         return null;
     }
 
-    public ExpressionNode parseIdentifier() {
+    public LiteralNode<?> parseNegativeLiteral() {
+        if (stream.next() == null) {
+            Error.error(stream.current(), "Expected integer literal after '-'");
+        }
+        if (stream.next().type() != TokenType.INTEGER_LITERAL) {
+            Error.error(stream.current(), "Expected integer literal.");
+        }
+        stream.consume(); // Skip '-'
+        ExpressionNode xpr = parsePrimaryExpression();
+        if (!(xpr instanceof LiteralNode<?>)) {
+            Error.error("Not a literal node.");
+        }
+        LiteralNode<?> n = ((LiteralNode<?>) xpr);
+        if (!(n.value() instanceof Integer)) {
+            Error.error(stream.current(), "Not an integer literal.");
+        }
+        int i = ((Integer) n.value()).intValue();
+        i = (i > 0) ? i * -1 : i;
+        ((LiteralNode<Integer>) n).setValue(i);
+        return n;
+    }
+
+    public IdentifierNode parseIdentifier() {
         if (stream.current().type() != TokenType.IDENTIFIER) {
             Error.error(stream.current(), "Expected identifier.");
         }
@@ -213,6 +228,40 @@ public class Parser {
         }
 
         return node;
+    }
+
+    public ComplexInitializer parseComplexInitializer() {
+        if (stream.current().type() != TokenType.LBRACKET) {
+            Error.error(stream.current(), "Expoected '['");
+        }
+
+        List<Pair<IdentifierNode, ExpressionNode>> xprs = new ArrayList<>();
+
+        stream.consume();
+
+        while (stream.current().type() != TokenType.RBRACKET) {
+            if (stream.current().type() != TokenType.IDENTIFIER) {
+                Error.error(stream.current(), "Expected identifier");
+            }
+            IdentifierNode iden = stream.current().toIdentifierNode();
+            stream.consume();
+            if (stream.current().type() != TokenType.COLON) {
+                Error.error(stream.current(), "Expected ';'");
+            }
+            stream.consume();
+            ExpressionNode xpr = parseExpression();
+            stream.consume();
+            xprs.add(new Pair<>(iden, xpr));
+            if (stream.current().type() == TokenType.RBRACKET) {
+                break;
+            } else if (stream.current().type() == TokenType.COMMA) {
+                stream.consume();
+                continue;
+            } else {
+                Error.error("Expected ']' or ',' and more elements");
+            }
+        }
+        return new ComplexInitializer(xprs);
     }
 
 

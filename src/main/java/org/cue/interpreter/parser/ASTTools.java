@@ -29,7 +29,10 @@ public class ASTTools {
     public static void analyzeType(DataType type, int depth) {
         if (type instanceof DummyType) {
             DummyType dt = ((DummyType) type);
-            print(depth, "Dummy Type => " + dt.identifier());
+            print(depth, "Dummy Type => ");
+            depth ++;
+            analyze(dt.identifier(), depth);
+            depth --;
         }
         if (type instanceof PrimitiveDataType) {
             PrimitiveDataType pdt = ((PrimitiveDataType) type);
@@ -98,7 +101,7 @@ public class ASTTools {
             print(depth, "Complex Initializer ->");
             depth ++;
             for (int i = 0; i < lxp.expressions().size(); i ++) {
-                print(depth, lxp.expressions().get(i).first() + " ->");
+                analyze(lxp.expressions().get(i).first(), depth);
                 depth ++;
                 analyze(lxp.expressions().get(i).last(), depth);
                 depth --;

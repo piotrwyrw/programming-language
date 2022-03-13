@@ -1,7 +1,6 @@
 package org.cue.interpreter;
 
 import org.cue.interpreter.parser.ASTTools;
-import org.cue.interpreter.parser.ExpressionNode;
 import org.cue.interpreter.parser.GenericNode;
 import org.cue.interpreter.parser.Parser;
 import org.cue.interpreter.tokenizer.TokenStream;
