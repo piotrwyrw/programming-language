@@ -26,17 +26,26 @@ public class ASTTools {
         System.out.print(spacer(d) + str + (endl ? "\n" : ""));
     }
 
+    static String com(int d) {
+        return (d == 0) ? "" : ",";
+    }
+
     public static void analyzeType(DataType type, int depth) {
         if (type instanceof DummyType) {
             DummyType dt = ((DummyType) type);
-            print(depth, "Dummy Type => ");
+            print(depth, "\"DummyType\": {");
             depth ++;
             analyze(dt.identifier(), depth);
             depth --;
+            print(depth, "}" + com(depth));
         }
         if (type instanceof PrimitiveDataType) {
             PrimitiveDataType pdt = ((PrimitiveDataType) type);
-            print(depth, "Primitive Type => " + pdt.type().toString());
+            print(depth, "\"PrimitiveType\": {");
+            depth ++;
+            print(depth, "\"name\"" + pdt.type().toString());
+            depth --;
+            print(depth, "}" + com(depth));
         }
     }
 
@@ -44,73 +53,77 @@ public class ASTTools {
         int depth = d;
         if (node instanceof ProgramNode) {
             ProgramNode n = ((ProgramNode) node);
-            print(depth, "Program ->");
+            print(depth, "\"ProgramNode\": {");
             depth ++;
             for (GenericNode genericNode : n.nodes()) {
                 analyze(genericNode, depth);
             }
             depth --;
+            print(depth, "}");
         }
         if (node instanceof BinaryExpression) {
             BinaryExpression expr = ((BinaryExpression) node);
-            print(depth, "Binary Expression [" + expr.op().toString() + "] ->");
+            print(depth, "\"BinaryExpressionNode\": {");
             depth ++;
-            print(depth, "Left =>");
+            print(depth, "\"Type\": " + expr.op().toString() + com(depth));
+            print(depth, "\"Left\": {");
             depth ++;
             analyze(expr.left(), depth);
             depth --;
-            print(depth, "Right =>");
+            print(depth, "}" + com(depth));
+            print(depth, "\"Right\": {");
             depth ++;
             analyze(expr.right(), depth);
             depth --;
+            print(depth, "}");
         }
         if (node instanceof LiteralNode<?>) {
             LiteralNode<?> n = ((LiteralNode<?>) node);
-            print(depth, "Literal node => ", false);
-            if (n.value() instanceof String) {
-                System.out.println("(String) " + n.value());
-            } else if (n.value() instanceof Integer) {
-                System.out.println("(Integer) " + n.value());
-            } else if (n.value() instanceof Boolean) {
-                System.out.println("(Boolean) " + n.value());
-            }
+            print(depth, "\"LiteralExpressionNode\": {");
+            depth ++;
+            String type = (n.value() instanceof String) ? "String" : ((n.value() instanceof Integer) ? "Integer" : "Boolean");
+            print(depth, "\"Type\": " + type);
+            depth --;
+            print(depth, "}" + com(depth));
         }
         if (node instanceof VariableDeclarationNode) {
             VariableDeclarationNode n = ((VariableDeclarationNode) node);
-            print(depth, "Variable declaration ->");
+            print(depth, "\"VariableDeclarationNode\": {");
             depth ++;
-            print(depth, "Type -> ", true);
+            print(depth, "\"Type\": {");
             depth ++;
             analyzeType(n.type(), depth);
             depth --;
-            print(depth, "Name => ");
+            print(depth, "}, ");
+            print(depth, "\"Identifier\": {");
             depth ++;
             analyze(n.identifier(), depth);
             depth --;
-            print(depth, "Value ->");
+            print(depth, "},");
+            print(depth, "\"Expression\": {");
             depth ++;
             analyze(n.value(), depth);
             depth -= 2;
+            print(depth, "}" + com(depth));
         }
         if (node instanceof IdentifierNode) {
             IdentifierNode id = ((IdentifierNode) node);
-            print(depth, "Identifier node => " + id.identifier().value());
+            print(depth, "\"Identifier\": \"" + id.identifier().value() + "\"" + com(depth));
         }
         if (node instanceof ComplexInitializer) {
             ComplexInitializer lxp = ((ComplexInitializer) node);
-            print(depth, "Complex Initializer ->");
-            depth ++;
+            print(depth, "\"ComplexInitializer\": {");
             for (int i = 0; i < lxp.expressions().size(); i ++) {
-                analyze(lxp.expressions().get(i).first(), depth);
                 depth ++;
+                analyze(lxp.expressions().get(i).first(), depth);
                 analyze(lxp.expressions().get(i).last(), depth);
                 depth --;
             }
-            depth --;
+            print(depth, "}" + com(depth));
         }
         if (node instanceof StructureNode) {
             StructureNode struc = ((StructureNode) node);
-            print(depth, "Structure definition ->");
+            print(depth, "\"StructureDefinitionNode\": {");
             depth ++;
             for (int i = 0; i < struc.elements().size(); i ++) {
                 Variable var = struc.elements().get(i);
@@ -120,6 +133,7 @@ public class ASTTools {
                 depth --;
             }
             depth --;
+            print(depth, "}" + com(depth));
         }
     }
 
